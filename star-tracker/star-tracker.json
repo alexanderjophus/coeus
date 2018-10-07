@@ -1,0 +1,17 @@
+
+{
+  "pipeline": {
+    "name": "star-tracker"
+  },
+  "input": {
+    "atom": {
+      "glob": "/api/v1/game/*/feed/live",
+      "repo": "statsapi"
+    }
+  },
+  "transform": {
+    "cmd": ["./star-tracker" ],
+    "image": "trelore/star-tracker:0.6"
+  },
+  "incremental": true
+}
