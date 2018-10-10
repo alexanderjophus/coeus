@@ -1,12 +1,18 @@
-all: build
+.PHONY: all
+all : build test
 
-build: 
+.PHONY: build
+build : bin/star-tracker
 	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o ./bin/star-tracker .
 
-docker-build: build ## some steps
+.PHONY : clean
+clean: 
+	rm -rf bin/
 
-pipeline:
+docker-build : build ## some steps
+
+pipeline :
 	pachctl create-pipeline -f star-tracker.json
 
-test: ## runs tests
+test : ## runs tests
 	go test -v ./...

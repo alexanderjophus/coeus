@@ -79,53 +79,8 @@ func main() {
 			log.Fatal(err)
 		}
 
-		// inefficient just wanting to get this working to move onto more meaningful transformations
-		// also a defect here, needs splitting out into a func and testing independently
-		foundFirst, foundSecond, foundThird := false, false, false
-		for _, star := range stars {
-			if star.ID == liveFeed.LiveData.Decisions.FirstStar.ID {
-				star.FirstStar++
-				foundFirst = true
-			}
-			if star.ID == liveFeed.LiveData.Decisions.SecondStar.ID {
-				star.SecondStar++
-				foundSecond = true
-			}
-			if star.ID == liveFeed.LiveData.Decisions.ThirdStar.ID {
-				star.ThirdStar++
-				foundThird = true
-			}
-		}
-		if !foundFirst {
-			stars = append(stars, StarCount{
-				ID:         liveFeed.LiveData.Decisions.FirstStar.ID,
-				Link:       liveFeed.LiveData.Decisions.FirstStar.Link,
-				FullName:   liveFeed.LiveData.Decisions.FirstStar.FullName,
-				FirstStar:  1,
-				SecondStar: 0,
-				ThirdStar:  0,
-			})
-		}
-		if !foundSecond {
-			stars = append(stars, StarCount{
-				ID:         liveFeed.LiveData.Decisions.SecondStar.ID,
-				Link:       liveFeed.LiveData.Decisions.SecondStar.Link,
-				FullName:   liveFeed.LiveData.Decisions.SecondStar.FullName,
-				FirstStar:  0,
-				SecondStar: 1,
-				ThirdStar:  0,
-			})
-		}
-		if !foundThird {
-			stars = append(stars, StarCount{
-				ID:         liveFeed.LiveData.Decisions.ThirdStar.ID,
-				Link:       liveFeed.LiveData.Decisions.ThirdStar.Link,
-				FullName:   liveFeed.LiveData.Decisions.ThirdStar.FullName,
-				FirstStar:  0,
-				SecondStar: 0,
-				ThirdStar:  1,
-			})
-		}
+		stars = addStars(stars, &liveFeed.LiveData.Decisions)
+
 	}
 	//write stars back out to file
 	f, err := os.OpenFile(outDir+"stars.csv", os.O_RDWR, os.ModeExclusive)
@@ -178,4 +133,60 @@ func extractDataFromCSVFile(src string) ([]StarCount, error) {
 		return nil, err
 	}
 	return stars, nil
+}
+
+func addStars(s []StarCount, decision *Decisions) []StarCount {
+	// inefficient just wanting to get this working to move onto more meaningful transformations
+	// also a defect here, needs splitting out into a func and testing independently
+	foundFirst, foundSecond, foundThird := false, false, false
+	for k := range s {
+		if s[k].ID == decision.FirstStar.ID {
+			s[k].FirstStar++
+			foundFirst = true
+			continue
+		}
+		if s[k].ID == decision.SecondStar.ID {
+			s[k].SecondStar++
+			foundSecond = true
+			continue
+		}
+		if s[k].ID == decision.ThirdStar.ID {
+			s[k].ThirdStar++
+			foundThird = true
+			continue
+		}
+	}
+
+	if !foundFirst {
+		s = append(s, StarCount{
+			ID:         decision.FirstStar.ID,
+			Link:       decision.FirstStar.Link,
+			FullName:   decision.FirstStar.FullName,
+			FirstStar:  1,
+			SecondStar: 0,
+			ThirdStar:  0,
+		})
+	}
+	if !foundSecond {
+		s = append(s, StarCount{
+			ID:         decision.SecondStar.ID,
+			Link:       decision.SecondStar.Link,
+			FullName:   decision.SecondStar.FullName,
+			FirstStar:  0,
+			SecondStar: 1,
+			ThirdStar:  0,
+		})
+	}
+	if !foundThird {
+		s = append(s, StarCount{
+			ID:         decision.ThirdStar.ID,
+			Link:       decision.ThirdStar.Link,
+			FullName:   decision.ThirdStar.FullName,
+			FirstStar:  0,
+			SecondStar: 0,
+			ThirdStar:  1,
+		})
+	}
+
+	return s
 }

@@ -11,7 +11,7 @@
   },
   "transform": {
     "cmd": ["./star-tracker" ],
-    "image": "trelore/star-tracker:0.8"
+    "image": "trelore/star-tracker:0.10"
   },
   "incremental": true
 }
