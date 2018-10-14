@@ -1,5 +1,5 @@
 FROM scratch
 
-ADD bin/star-tracker /
+ADD bin/star-tracker-pachd /
 
-CMD ["star-tracker"]
+CMD ["star-tracker-pachd"]

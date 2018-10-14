@@ -7,19 +7,24 @@ VER := 0.14
 all : test build docker
 
 .PHONY: build
-build : bin/star-tracker
+build : bin/star-tracker bin/star-tracker-pachd
 
 .PHONY: docker
-docker : bin/star-tracker.tar.gz
+docker : bin/star-tracker-pachd.tar.gz
 
 bin/star-tracker: $(SRC)
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-s -w" -installsuffix cgo -o ./bin/star-tracker . 
-	upx --brute bin/star-tracker
+	go build -o ./bin/star-tracker .
 
-bin/star-tracker.tar.gz: bin/star-tracker star-tracker.json.tmpl
+bin/star-tracker-pachd: $(SRC)
+	CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-s -w -X main.inDir=/pfs/statsapi/api/v1/game/ -X main.outDir=/pfs/out/" -installsuffix cgo -o ./bin/star-tracker-pachd .
+	# CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-s -w" -installsuffix cgo -o ./bin/star-tracker-pachd .
+	upx --brute bin/star-tracker-pachd
+
+bin/star-tracker-pachd.tar.gz: bin/star-tracker-pachd star-tracker.json.tmpl
 	./build_save.sh
 
 pipeline : star-tracker.json
+	pachctl delete-pipeline star-tracker
 	pachctl create-pipeline -f star-tracker.json
 
 test : $(SRC)
@@ -28,6 +33,5 @@ test : $(SRC)
 .PHONY : clean
 clean: 
 	rm -rf bin/
-	rm -rf test-results
-	rm -rf statsapi/
+	rm -rf test
 	rm -rf out/
