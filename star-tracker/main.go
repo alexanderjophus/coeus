@@ -10,39 +10,12 @@ import (
 	"github.com/gocarina/gocsv"
 )
 
-const inDir = "/pfs/statsapi/api/v1/game/"
-const outDir = "/pfs/out/"
+var (
+	inDir  = "/pfs/statsapi/api/v1/game/"
+	outDir = "/pfs/out/"
+)
 
-// LiveFeedData is the response from a /${GAME_ID}/feed/live endpoint
-type LiveFeedData struct {
-	LiveData LiveData `json:"liveData"`
-}
-
-// LiveData holds a bunch of structs like plays and decisions
-type LiveData struct {
-	Decisions Decisions `json:"decisions"`
-}
-
-// Decisions reflects the decisions in the game, stars/winning & losing goalie
-type Decisions struct {
-	FirstStar  Star `json:"firstStar"`
-	SecondStar Star `json:"secondStar"`
-	ThirdStar  Star `json:"thirdStar"`
-}
-
-// Star holds information about a player
-type Star struct {
-	ID       int    `json:"id"`
-	FullName string `json:"fullName"`
-	Link     string `json:"link"`
-}
-
-// this really wants to be a csv like
-// ID, Link, FullName, FirstStars, SecondStars, ThirdStars
-// 8477956, /api/v1/people/8477956, David Pastrnak, 0, 0, 1
-
-// Output is the csv file we ammend to track star of the game players
-type Output struct {
+type Stars struct {
 	Stars []StarCount
 }
 
@@ -57,29 +30,33 @@ type StarCount struct {
 }
 
 func main() {
+	Exec(outDir+"stars.csv", inDir)
+}
+
+func Exec(totalLoc string, id string) {
 	os.Mkdir(outDir, 0700)
 
-	stars, err := extractDataFromCSVFile(outDir + "stars.csv")
+	s, err := extractDataFromCSVFile(totalLoc)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Printf("Reading dir  %s\n", inDir)
+	log.Printf("Reading dir  %s\n", id)
 
-	dir, err := ioutil.ReadDir(inDir)
+	dir, err := ioutil.ReadDir(id)
 	if err != nil {
 		log.Fatalf("read dir: %s", err)
 	}
 
 	for _, d := range dir {
-		fileName := inDir + d.Name() + "/feed/live"
+		fileName := id + d.Name() + "/feed/live"
 		var liveFeed LiveFeedData
 		err := extractDataFromJSONFile(&liveFeed, fileName)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		stars = addStars(stars, &liveFeed.LiveData.Decisions)
+		s.update(liveFeed.LiveData.Decisions)
 
 	}
 	//write stars back out to file
@@ -87,7 +64,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = gocsv.MarshalCSVWithoutHeaders(stars, gocsv.NewSafeCSVWriter(csv.NewWriter(f)))
+	err = gocsv.MarshalCSVWithoutHeaders(s.Stars, gocsv.NewSafeCSVWriter(csv.NewWriter(f)))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,82 +88,35 @@ func extractDataFromJSONFile(v interface{}, src string) error {
 	return nil
 }
 
-func extractDataFromCSVFile(src string) ([]StarCount, error) {
+func extractDataFromCSVFile(src string) (*Stars, error) {
 	log.Printf("Reading %s\n", src)
-	source, err := os.Create(src)
+	source, err := os.Open(src)
 	if err != nil {
-		return nil, err
+		source, err = os.Create(src)
+		if err != nil {
+			return nil, err
+		}
 	}
 	defer source.Close()
 
 	var stars []StarCount
+	s := Stars{
+		Stars: stars,
+	}
 
 	f, err := source.Stat()
 	if err != nil {
 		return nil, err
 	}
 	if f.Size() == 0 {
-		return stars, nil
+		return &s, nil
 	}
 
-	if err := gocsv.UnmarshalWithoutHeaders(source, &stars); err != nil {
+	err = gocsv.UnmarshalWithoutHeaders(source, &stars)
+	if err != nil {
 		return nil, err
 	}
-	return stars, nil
-}
 
-func addStars(s []StarCount, decision *Decisions) []StarCount {
-	// inefficient just wanting to get this working to move onto more meaningful transformations
-	// also a defect here, needs splitting out into a func and testing independently
-	foundFirst, foundSecond, foundThird := false, false, false
-	for k := range s {
-		if s[k].ID == decision.FirstStar.ID {
-			s[k].FirstStar++
-			foundFirst = true
-			continue
-		}
-		if s[k].ID == decision.SecondStar.ID {
-			s[k].SecondStar++
-			foundSecond = true
-			continue
-		}
-		if s[k].ID == decision.ThirdStar.ID {
-			s[k].ThirdStar++
-			foundThird = true
-			continue
-		}
-	}
-
-	if !foundFirst {
-		s = append(s, StarCount{
-			ID:         decision.FirstStar.ID,
-			Link:       decision.FirstStar.Link,
-			FullName:   decision.FirstStar.FullName,
-			FirstStar:  1,
-			SecondStar: 0,
-			ThirdStar:  0,
-		})
-	}
-	if !foundSecond {
-		s = append(s, StarCount{
-			ID:         decision.SecondStar.ID,
-			Link:       decision.SecondStar.Link,
-			FullName:   decision.SecondStar.FullName,
-			FirstStar:  0,
-			SecondStar: 1,
-			ThirdStar:  0,
-		})
-	}
-	if !foundThird {
-		s = append(s, StarCount{
-			ID:         decision.ThirdStar.ID,
-			Link:       decision.ThirdStar.Link,
-			FullName:   decision.ThirdStar.FullName,
-			FirstStar:  0,
-			SecondStar: 0,
-			ThirdStar:  1,
-		})
-	}
-
-	return s
+	s.Stars = stars
+	return &s, nil
 }
