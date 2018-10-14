@@ -49,7 +49,7 @@ type StarCount struct {
 }
 
 func Exec(totalLoc string, id string) {
-	os.Mkdir(outDir, 0700)
+	os.Mkdir(totalLoc, 0700)
 
 	s, err := extractDataFromCSVFile(totalLoc)
 	if err != nil {
@@ -75,7 +75,7 @@ func Exec(totalLoc string, id string) {
 
 	}
 	//write stars back out to file
-	f, err := os.OpenFile(outDir+"stars.csv", os.O_RDWR, os.ModeExclusive)
+	f, err := os.OpenFile(totalLoc, os.O_RDWR, os.ModeExclusive)
 	if err != nil {
 		log.Fatal(err)
 	}
