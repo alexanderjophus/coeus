@@ -48,8 +48,9 @@ type StarCount struct {
 	ThirdStar  int
 }
 
-func Exec(totalLoc string, id string) {
-	os.Mkdir(totalLoc, 0700)
+func Exec(out string, id string) {
+	os.Mkdir(out, 0700)
+	totalLoc := outDir + "stars.csv"
 
 	s, err := extractDataFromCSVFile(totalLoc)
 	if err != nil {

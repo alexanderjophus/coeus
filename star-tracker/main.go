@@ -11,5 +11,5 @@ var (
 
 func main() {
 	log.Printf("service starting. in %s. out %s\n", inDir, outDir)
-	Exec(outDir+"stars.csv", inDir)
+	Exec(outDir, inDir)
 }
