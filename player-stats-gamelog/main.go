@@ -21,7 +21,7 @@ func main() {
 		log.Fatalf("read dir: %s", err)
 	}
 	for _, d := range dir {
-		fileName := inDir + d.Name() + "/stats?stats=gameLog"
+		fileName := inDir + d.Name() + "/stats/stats_gameLog.raw"
 		var s gamelog.PlayerStatsGameLog
 		err := extractDataFromJSONFile(&s, fileName)
 		if err != nil {

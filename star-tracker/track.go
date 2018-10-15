@@ -65,7 +65,7 @@ func Exec(out string, id string) {
 	}
 
 	for _, d := range dir {
-		fileName := id + d.Name() + "/feed/live"
+		fileName := id + d.Name() + "/feed/live.raw"
 		var liveFeed LiveFeedData
 		err := extractDataFromJSONFile(&liveFeed, fileName)
 		if err != nil {

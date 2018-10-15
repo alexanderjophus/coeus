@@ -2,4 +2,4 @@ bin/
 out/
 statsapi/
 test
-star-tracker.json
+player-stats-gamelog.json

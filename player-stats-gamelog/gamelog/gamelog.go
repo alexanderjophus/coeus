@@ -1,9 +1,6 @@
 package gamelog
 
-import (
-	"encoding/json"
-	"log"
-)
+import "fmt"
 
 // PlayerStatsGameLog json struct to represent /api/v1/people/XXXXXXXX/stats?stats=gameLog
 type PlayerStatsGameLog struct {
@@ -65,9 +62,5 @@ type PlayerStatsGameLog struct {
 
 // Exec does stuff
 func Exec(s PlayerStatsGameLog) {
-	b, err := json.Marshal(s)
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println(b)
+	fmt.Printf("%+v\n", s)
 }
