@@ -1,0 +1,15 @@
+{
+  "pipeline": {
+    "name": "player-stats-gamelog"
+  },
+  "input": {
+    "atom": {
+      "glob": "/*",
+      "repo": "statsapi"
+    }
+  },
+  "transform": {
+    "cmd": ["./player-stats-gamelog-pachd" ],
+    "image": "player-stats-gamelog:VERSION"
+  }
+}
