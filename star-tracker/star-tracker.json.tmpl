@@ -4,14 +4,12 @@
   },
   "input": {
     "atom": {
-      "glob": "/api/v1/game/*/feed/live",
+      "glob": "/*",
       "repo": "statsapi"
     }
   },
   "transform": {
     "cmd": ["./star-tracker-pachd" ],
     "image": "star-tracker:VERSION"
-  },
-  "incremental": true,
-  "enable_stats": true
+  }
 }

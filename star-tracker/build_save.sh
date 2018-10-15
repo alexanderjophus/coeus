@@ -15,5 +15,5 @@ sed "s/VERSION/0.0.0.$ver/g" star-tracker.json.tmpl > star-tracker.json
 echo "deleting star-tracker pipeline/repo"
 pachctl delete-pipeline star-tracker
 
-echo "create star=tracker pipeline"
+echo "create star-tracker pipeline"
 pachctl create-pipeline -f star-tracker.json
