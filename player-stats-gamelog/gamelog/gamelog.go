@@ -1,6 +1,11 @@
 package gamelog
 
-import "fmt"
+import (
+	"encoding/csv"
+	"io"
+	"log"
+	"strconv"
+)
 
 // PlayerStatsGameLog json struct to represent /api/v1/people/XXXXXXXX/stats?stats=gameLog
 type PlayerStatsGameLog struct {
@@ -65,12 +70,40 @@ type Split struct {
 }
 
 // Exec does stuff
-func Exec(s PlayerStatsGameLog) {
+func Exec(s PlayerStatsGameLog, w io.Writer) error {
+	c := csv.NewWriter(w)
+	defer c.Flush()
+
 	for _, stat := range s.Stats {
-		fmt.Println(stat.Type.DisplayName)
 		for _, split := range stat.Splits {
-			fmt.Printf("%v - G: %d, A: %d, P: %d\n", split.Date, split.Stat.Goals, split.Stat.Assists, split.Stat.Points)
+			err := c.Write([]string{
+				split.Date,
+				split.Opponent.Name,
+				strconv.FormatBool(split.IsHome),
+				split.Stat.TimeOnIce,
+				strconv.Itoa(split.Stat.Goals),
+				strconv.Itoa(split.Stat.Assists),
+				strconv.Itoa(split.Stat.Shots),
+				strconv.Itoa(split.Stat.Pim),
+				strconv.Itoa(split.Stat.Hits),
+				strconv.Itoa(split.Stat.PowerPlayGoals),
+				strconv.Itoa(split.Stat.PowerPlayPoints),
+				split.Stat.PowerPlayTimeOnIce,
+				split.Stat.EvenTimeOnIce,
+				split.Stat.PenaltyMinutes,
+				strconv.Itoa(split.Stat.GameWinningGoals),
+				strconv.Itoa(split.Stat.OverTimeGoals),
+				strconv.Itoa(split.Stat.ShortHandedGoals),
+				strconv.Itoa(split.Stat.ShortHandedPoints),
+				split.Stat.ShortHandedTimeOnIce,
+				strconv.Itoa(split.Stat.Blocked),
+				strconv.Itoa(split.Stat.PlusMinus),
+				strconv.Itoa(split.Stat.Shifts),
+			})
+			if err != nil {
+				log.Printf("failed to write game %s to file", split.Date)
+			}
 		}
-		// fmt.Printf("%+v\n", s)
 	}
+	return nil
 }

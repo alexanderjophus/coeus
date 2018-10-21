@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -28,7 +29,18 @@ func main() {
 			log.Fatal(err)
 		}
 
-		gamelog.Exec(s)
+		os.Mkdir("out", 0700)
+		fName := fmt.Sprintf("out/%s.csv", d.Name())
+		f, err := os.Create(fName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+
+		err = gamelog.Exec(s, f)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 
