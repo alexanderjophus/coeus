@@ -11,7 +11,8 @@ import (
 )
 
 var (
-	inDir = "./statsapi/api/v1/people/"
+	inDir  = "./statsapi/api/v1/people/"
+	outDir = "./out"
 )
 
 func main() {
@@ -29,8 +30,8 @@ func main() {
 			log.Fatal(err)
 		}
 
-		os.Mkdir("out", 0700)
-		fName := fmt.Sprintf("out/%s.csv", d.Name())
+		os.Mkdir(outDir, 0700)
+		fName := fmt.Sprintf("%s/%s.csv", outDir, d.Name())
 		f, err := os.Create(fName)
 		if err != nil {
 			log.Fatal(err)
