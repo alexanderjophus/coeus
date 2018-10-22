@@ -1,4 +1,4 @@
-# Star Tracker
+# Player Stats Gamelog
 
 This service is designed to read `/api/v1/people/${PEOPLE_ID}/stats?stats=gameLog` and output that players info
 
