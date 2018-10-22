@@ -1,0 +1,15 @@
+{
+  "pipeline": {
+    "name": "play-tracker"
+  },
+  "input": {
+    "atom": {
+      "glob": "/*",
+      "repo": "statsapi"
+    }
+  },
+  "transform": {
+    "cmd": ["./play-tracker-pachd" ],
+    "image": "play-tracker:VERSION"
+  }
+}
