@@ -86,8 +86,6 @@ func Exec(l LiveFeedResponse, w io.Writer) error {
 	c := csv.NewWriter(w)
 	defer c.Flush()
 
-	c.Write([]string{"X", "Y", "type", "period", "time_remaining"})
-
 	for _, play := range l.LiveData.Plays.AllPlays {
 		c.Write([]string{
 			fmt.Sprintf("%.1f", play.Coordinates.X),
