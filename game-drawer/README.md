@@ -1,8 +1,8 @@
 # Play Tracker
 
-This service creates a flat csv of all the plays that happened in the game.
+This service creates an SVG of the games goals
 
-Use `/api/v1/game/${GAME_ID}/feed/live` endpoint
+Use data from `play-tracker`
 
 ## Deployment
 
