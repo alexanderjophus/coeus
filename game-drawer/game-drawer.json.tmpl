@@ -1,0 +1,15 @@
+{
+  "pipeline": {
+    "name": "game-drawer"
+  },
+  "input": {
+    "atom": {
+      "glob": "/*",
+      "repo": "play-tracker"
+    }
+  },
+  "transform": {
+    "cmd": ["./game-drawer-pachd" ],
+    "image": "game-drawer:VERSION"
+  }
+}
