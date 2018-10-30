@@ -1,0 +1,15 @@
+{
+  "pipeline": {
+    "name": "game-drawerv2"
+  },
+  "input": {
+    "atom": {
+      "glob": "/*",
+      "repo": "statsapi"
+    }
+  },
+  "transform": {
+    "cmd": ["./game-drawerv2-pachd" ],
+    "image": "game-drawerv2:VERSION"
+  }
+}
