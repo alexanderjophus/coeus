@@ -2,4 +2,5 @@ bin/
 out/
 statsapi/
 test
-game-drawerv2.json
+game-drawerv2.jsonnet
+pipelines/

@@ -1,0 +1,24 @@
+local pachdPipeline(filter='') = {
+  pipeline: {
+    name: if filter != '' then "game-drawerv2-" + filter else "game-drawerv2"
+  },
+  input: {
+    atom: {
+      glob: "/*",
+      repo: "statsapi"
+    },
+  },
+  transform: {
+    cmd: [
+      "./game-drawerv2-pachd"
+    ] + if (filter != '') then ["-filter="+filter] else [],
+    image: "game-drawerv2:VERSION"
+  },
+};
+
+{
+  "pipelines/game-drawerv2.json": pachdPipeline(),
+  "pipelines/game-drawerv2-goal.json" : pachdPipeline('GOAL'),
+  "pipelines/game-drawerv2-shot.json" : pachdPipeline('SHOT'),
+  "pipelines/game-drawerv2-shot.json" : pachdPipeline('HIT'),
+}
