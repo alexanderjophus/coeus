@@ -1,6 +1,6 @@
 # Play Tracker
 
-DEPRECATED in favour of game simplifier
+DEPRECATED
 
 This service creates a flat csv of all the plays that happened in the game.
 
