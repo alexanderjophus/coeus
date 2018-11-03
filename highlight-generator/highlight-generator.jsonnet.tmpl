@@ -1,0 +1,24 @@
+local pachdPipeline(filter='') = {
+  pipeline: {
+    name: if filter != '' then "highlight-generator-" + filter else "highlight-generator"
+  },
+  input: {
+    atom: {
+      glob: "/api/v1/game/*",
+      repo: "statsapi"
+    },
+  },
+  transform: {
+    cmd: [
+      "./highlight-generator-pachd"
+    ] + if (filter != '') then ["-filter="+filter] else [],
+    image: "highlight-generator:VERSION"
+  },
+};
+
+{
+  "pipelines/highlight-generator.json": pachdPipeline(),
+  "pipelines/highlight-generator-goal.json" : pachdPipeline('GOAL'),
+  "pipelines/highlight-generator-shot.json" : pachdPipeline('SHOT'),
+  "pipelines/highlight-generator-hit.json" : pachdPipeline('HIT'),
+}
