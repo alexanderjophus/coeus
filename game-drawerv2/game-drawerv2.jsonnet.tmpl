@@ -4,7 +4,7 @@ local pachdPipeline(filter='') = {
   },
   input: {
     atom: {
-      glob: "/*",
+      glob: "/api/v1/game/*",
       repo: "statsapi"
     },
   },
@@ -20,5 +20,5 @@ local pachdPipeline(filter='') = {
   "pipelines/game-drawerv2.json": pachdPipeline(),
   "pipelines/game-drawerv2-goal.json" : pachdPipeline('GOAL'),
   "pipelines/game-drawerv2-shot.json" : pachdPipeline('SHOT'),
-  "pipelines/game-drawerv2-shot.json" : pachdPipeline('HIT'),
+  "pipelines/game-drawerv2-hit.json" : pachdPipeline('HIT'),
 }
