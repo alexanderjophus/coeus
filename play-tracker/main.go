@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/alexanderjosephtrelore/coeus/play-tracker/tracker"
+	"github.com/trelore/coeus/play-tracker/tracker"
 )
 
 var (

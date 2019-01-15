@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/alexanderjosephtrelore/coeus/game-drawer/drawer"
+	"github.com/trelore/coeus/game-drawer/drawer"
 )
 
 var (

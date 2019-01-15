@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/alexanderjosephtrelore/coeus/player-stats-gamelog/gamelog"
+	"github.com/trelore/coeus/player-stats-gamelog/gamelog"
 )
 
 var (

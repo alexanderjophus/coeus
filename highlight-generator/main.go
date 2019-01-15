@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/alexanderjosephtrelore/coeus/highlight-generator/thing"
+	"github.com/trelore/coeus/highlight-generator/thing"
 )
 
 var (
