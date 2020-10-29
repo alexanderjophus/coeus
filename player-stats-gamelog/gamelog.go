@@ -1,4 +1,4 @@
-package gamelog
+package main
 
 import (
 	"encoding/csv"

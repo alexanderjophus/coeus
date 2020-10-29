@@ -16,17 +16,16 @@ bin/player-stats-gamelog: $(SRC)
 
 bin/player-stats-gamelog-pachd: $(SRC)
 	CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-s -w -X main.inDir=/pfs/statsapi/api/v1/people/ -X main.outDir=/pfs/out/" -installsuffix cgo -o ./bin/player-stats-gamelog-pachd .
-	upx --brute bin/player-stats-gamelog-pachd
 
 bin/player-stats-gamelog-pachd.tar.gz: bin/player-stats-gamelog-pachd player-stats-gamelog.json.tmpl
 	./build_save.sh
 
 pipeline : player-stats-gamelog.json
-	pachctl delete-pipeline player-stats-gamelog
-	pachctl create-pipeline -f player-stats-gamelog.json
+	pachctl delete pipeline player-stats-gamelog
+	pachctl create pipeline -f player-stats-gamelog.json
 
-test : $(SRC)
-	go test -v ./... | tee test
+test:
+	go test -v ./...
 
 .PHONY : clean
 clean: 
