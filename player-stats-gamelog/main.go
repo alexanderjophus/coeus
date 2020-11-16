@@ -7,6 +7,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/trelore/coeus/player-stats-gamelog/gamelog"
 )
 
 // needs to be var as we use ldflags to make this
@@ -35,7 +37,7 @@ func run() error {
 			return nil
 		}
 
-		var s PlayerStatsGameLog
+		var s gamelog.PlayerStatsGameLog
 		err = extractDataFromJSONFile(&s, path)
 		if err != nil {
 			return err
@@ -52,7 +54,7 @@ func run() error {
 		}
 		defer f.Close()
 
-		err = Exec(s, f)
+		err = gamelog.Exec(s, f)
 		if err != nil {
 			return err
 		}
